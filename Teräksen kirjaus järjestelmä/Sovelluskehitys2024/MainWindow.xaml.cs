@@ -21,7 +21,7 @@ namespace Sovelluskehitys2024
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        string polku = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\k5000833\\Documents\\testitietokanta.mdf;Integrated Security=True;Connect Timeout=30;Encrypt=True";
+        string polku = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\k2202255\\Documents\\testitietokanta.mdf;Integrated Security=True;Connect Timeout=30";
         public MainWindow()
         {
             InitializeComponent();
@@ -32,9 +32,6 @@ namespace Sovelluskehitys2024
             {
                 PaivitaDataGrid("SELECT * FROM tuotteet", "tuotteet", tuotelista);
                 PaivitaDataGrid("SELECT * FROM asiakkaat", "asiakkaat", asiakaslista);
-                PaivitaDataGrid("SELECT ti.id as id, a.nimi as asiakas, tu.nimi as tuote FROM tilaukset ti, asiakkaat a, tuotteet tu WHERE a.id=ti.asiakas_id AND tu.id=ti.tuote_id AND ti.toimitettu='0'", "tilaukset", tilauslista);
-                PaivitaDataGrid("SELECT ti.id as id, a.nimi as asiakas, tu.nimi as tuote FROM tilaukset ti, asiakkaat a, tuotteet tu WHERE a.id=ti.asiakas_id AND tu.id=ti.tuote_id AND ti.toimitettu='1'", "tilaukset", toimitetutlista);
-                PaivitaComboBox(tuotelista_cb, tuotelista_cb_2);
                 PaivitaAsiakasComboBox();
             }
             catch
@@ -110,11 +107,6 @@ namespace Sovelluskehitys2024
             taulu.Columns.Add("ID", typeof(string));
             taulu.Columns.Add("NIMI", typeof(string));
 
-            /* tehdään sidokset että comboboxissa näytetää datataulua*/
-            asiakaslista_cb.ItemsSource = taulu.DefaultView;
-            asiakaslista_cb.DisplayMemberPath = "NIMI";
-            asiakaslista_cb.SelectedValuePath = "ID";
-
             while (lukija.Read()) // käsitellään kyselytulos rivi riviltä
             {
                 int id = lukija.GetInt32(0);
@@ -132,7 +124,6 @@ namespace Sovelluskehitys2024
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             PaivitaDataGrid("SELECT * FROM tuotteet", "tuotteet", tuotelista);
-            PaivitaComboBox(tuotelista_cb, tuotelista_cb_2);
 
         }
 
@@ -153,7 +144,6 @@ namespace Sovelluskehitys2024
             yhteys.Close();
 
             PaivitaDataGrid("SELECT * FROM tuotteet", "tuotteet", tuotelista);
-            PaivitaComboBox(tuotelista_cb, tuotelista_cb_2);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
@@ -168,7 +158,6 @@ namespace Sovelluskehitys2024
             yhteys.Close();
 
             PaivitaDataGrid("SELECT * FROM tuotteet", "tuotteet", tuotelista);
-            PaivitaComboBox(tuotelista_cb, tuotelista_cb_2);
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
@@ -191,17 +180,9 @@ namespace Sovelluskehitys2024
             SqlConnection yhteys = new SqlConnection(polku);
             yhteys.Open();
 
-            string asiakasID = asiakaslista_cb.SelectedValue.ToString();
-            string tuoteID = tuotelista_cb_2.SelectedValue.ToString();
-
-            string sql = "INSERT INTO tilaukset (asiakas_id, tuote_id) VALUES ('" + asiakasID + "','" + tuoteID + "')";
-
-            SqlCommand komento = new SqlCommand(sql, yhteys);
-            komento.ExecuteNonQuery();
 
             yhteys.Close();
 
-            PaivitaDataGrid("SELECT ti.id as id, a.nimi as asiakas, tu.nimi as tuote FROM tilaukset ti, asiakkaat a, tuotteet tu WHERE a.id=ti.asiakas_id AND tu.id=ti.tuote_id AND ti.toimitettu='0'", "tilaukset", tilauslista);
         }
 
         private void toimita_tilaus_Click(object sender, RoutedEventArgs e)
@@ -218,9 +199,6 @@ namespace Sovelluskehitys2024
             komento.ExecuteNonQuery();
 
             yhteys.Close();
-
-            PaivitaDataGrid("SELECT ti.id as id, a.nimi as asiakas, tu.nimi as tuote FROM tilaukset ti, asiakkaat a, tuotteet tu WHERE a.id=ti.asiakas_id AND tu.id=ti.tuote_id AND ti.toimitettu='0'", "tilaukset", tilauslista);
-            PaivitaDataGrid("SELECT ti.id as id, a.nimi as asiakas, tu.nimi as tuote FROM tilaukset ti, asiakkaat a, tuotteet tu WHERE a.id=ti.asiakas_id AND tu.id=ti.tuote_id AND ti.toimitettu='1'", "tilaukset", toimitetutlista);
         }
         
     }
