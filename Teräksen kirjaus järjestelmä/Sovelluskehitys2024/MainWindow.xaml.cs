@@ -20,7 +20,7 @@ namespace Sovelluskehitys2024
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        string polku = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\k2202255\\Documents\\testitietokanta.mdf;Integrated Security=True;Connect Timeout=30";
+        string polku = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Arttu\\Documents\\testitietokanta.mdf;Integrated Security=True;Connect Timeout=30";
         public MainWindow()
         {
             InitializeComponent();
@@ -29,7 +29,7 @@ namespace Sovelluskehitys2024
 
             try
             {
-                PaivitaDataGrid("SELECT * FROM tuotteet", "tuotteet", tuotelista);
+                PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali", "tuotteet", tuotelista);
                 PaivitaDataGrid("SELECT * FROM asiakkaat", "asiakkaat", asiakaslista);
                 PaivitaAsiakasComboBox();
             }
@@ -123,7 +123,6 @@ namespace Sovelluskehitys2024
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             PaivitaDataGrid("SELECT * FROM tuotteet", "tuotteet", tuotelista);
-
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -136,35 +135,23 @@ namespace Sovelluskehitys2024
             SqlConnection yhteys = new SqlConnection(polku);
             yhteys.Open();
 
-            string kysely = "INSERT INTO tuotteet (nimi, hinta) VALUES ('" + tuotenimi.Text + "'," + tuotehinta.Text + ");";
+            string kysely = "INSERT INTO tuotteet (materiaali, muoto, mitat) VALUES ('" + materiaali.Text + "','" + muoto.Text + "','" + mitat.Text +"');";
             SqlCommand komento = new SqlCommand(kysely, yhteys);
             komento.ExecuteNonQuery();
 
             yhteys.Close();
 
-            PaivitaDataGrid("SELECT * FROM tuotteet", "tuotteet", tuotelista);
+            PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali", "tuotteet", tuotelista);
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            SqlConnection yhteys = new SqlConnection(polku);
-            yhteys.Open();
-
-            string id = tuotelista_cb.SelectedValue.ToString();
-            string kysely = "DELETE FROM tuotteet WHERE id='" + id + "';";
-            SqlCommand komento = new SqlCommand(kysely, yhteys);
-            komento.ExecuteNonQuery();
-            yhteys.Close();
-
-            PaivitaDataGrid("SELECT * FROM tuotteet", "tuotteet", tuotelista);
-        }
+        
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             SqlConnection yhteys = new SqlConnection(polku);
             yhteys.Open();
 
-            string kysely = "INSERT INTO asiakkaat (nimi, osoite, puhelin) VALUES ('" + asiakasnimi.Text + "','" + asiakasosoite.Text + "','" + asiakaspuhelin.Text + "');";
+            string kysely = "INSERT INTO asiakkaat (yrityksen_nimi, yhteys_henkilö, puhelin_numero) VALUES ('" + yrityksen_nimi.Text + "','" + yhteys_henkilö.Text + "','" + puhelin_numero.Text + "');";
             SqlCommand komento = new SqlCommand(kysely, yhteys);
             komento.ExecuteNonQuery();
 

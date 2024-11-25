@@ -1,6 +1,10 @@
-﻿create table varasto (id INTEGER IDENTITY(1,1) PRIMARY KEY, palkin_id int, hylly_paikka int);
+﻿create table tuotteet (id INTEGER IDENTITY(1,1) PRIMARY KEY, materiaali VARCHAR(50), muoto VARCHAR(50), mitat VARCHAR(50));
+create table asiakkaat (id INTEGER IDENTITY(1,1) PRIMARY KEY, yrityksen_nimi VARCHAR(50), yhteys_henkilö VARCHAR(50), puhelin_numero VARCHAR(50));
+create table varasto_paikat (id INTEGER IDENTITY(1,1) PRIMARY KEY, varasto_paikka VARCHAR(50));
 
-drop table tuotteet1;
+
+
+drop table asiakkaat;
 
 
 
