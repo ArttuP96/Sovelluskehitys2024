@@ -13,7 +13,6 @@ using System.Windows.Shapes;
 using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using Microsoft.Data.SqlClient;
-
 namespace Sovelluskehitys2024
 {
     /// <summary>
