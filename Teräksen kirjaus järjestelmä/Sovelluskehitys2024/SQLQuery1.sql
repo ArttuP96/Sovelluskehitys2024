@@ -5,16 +5,11 @@ create table varasto_paikat (id INTEGER IDENTITY(1,1) PRIMARY KEY, varasto_paikk
 
 
 --UPDATE tuotteet SET määrä = 0;
-
 --ALTER TABLE tuotteet ADD määrä int;
-
 --drop table asiakkaat;
-
-
-UPDATE tuotteet SET määrä=15 WHERE materiaali='ALU' AND muoto = 'neliöputki' AND mitat = '30x30x2';
-
-
-DELETE FROM tuotteet WHERE id=13;
+UPDATE tuotteet SET määrä=0 WHERE materiaali='ALU' AND muoto = 'neliöputki' AND mitat = '30x30x2';
+--DELETE FROM tuotteet WHERE id=13;
+--Select määrä from tuotteet WHERE materiaali = 'ALU' AND muoto = 'neliöputki' AND mitat = '50x50x3';
 
 
 

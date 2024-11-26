@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -10,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ControlzEx.Standard;
 using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using Microsoft.Data.SqlClient;
@@ -212,14 +214,23 @@ namespace Sovelluskehitys2024
             string materiaali = materiaali_cb.SelectedValue.ToString();
             string muoto = Muoto_cb.SelectedValue.ToString();
 
+            //kokeilua, yritä kaivaa current määrä
+            //Select määrä from tuotteet WHERE materiaali = 'ALU' AND muoto = 'neliöputki' AND mitat = '50x50x3';
+            string määrä_atm_komento = "Select määrä from tuotteet WHERE materiaali = '" + materiaali + "' AND muoto = '" + muoto + "' AND mitat = '" + Mitat_varasto.Text + "';";
+            SqlCommand määrä_komento = new SqlCommand(määrä_atm_komento, yhteys);
+
+            int result = (Int32)määrä_komento.ExecuteScalar();
+            //object result = määrä_komento.ExecuteScalar();
+
+            //kerrotaan kuudella koska putket ovat 6 metrisiä
+            int oikea_määrä = result + int.Parse(määrä.Text) * 6;
+
             //UPDATE tuotteet SET määrä=15 WHERE materiaali='ALU' AND muoto = 'neliöputki' AND mitat = '30x30x2';
-            string kysely = "UPDATE tuotteet SET määrä=" + määrä.Text + " WHERE materiaali='" + materiaali + "' AND muoto = '"+ muoto +"' AND mitat = '" + mitat.Text + "';";
+            string kysely = "UPDATE tuotteet SET määrä=" +  oikea_määrä + " WHERE materiaali='" + materiaali + "' AND muoto = '"+ muoto +"' AND mitat = '" + Mitat_varasto.Text + "';";
             SqlCommand komento = new SqlCommand(kysely, yhteys);
             komento.ExecuteNonQuery();
 
             yhteys.Close();
-
-            poista.Content=kysely;
 
             PaivitaDataGrid("SELECT materiaali, muoto, mitat FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", tuotelista);
             PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
