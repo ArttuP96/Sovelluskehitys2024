@@ -33,7 +33,10 @@ namespace Sovelluskehitys2024
                 PaivitaDataGrid("SELECT * FROM asiakkaat", "asiakkaat", asiakaslista);
                 PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
                 PaivitaAsiakasComboBox();
-                
+                PaivitaMateriaaliComboBox();
+                PaivitaMuotoComboBox();
+
+
             }
             catch
             {
@@ -119,6 +122,56 @@ namespace Sovelluskehitys2024
             yhteys.Close();
         }
 
+        private void PaivitaMateriaaliComboBox() //kopioitu asiakas cb:stä
+        {
+            //tuotelista_cb.Items.Clear();
+
+            SqlConnection yhteys = new SqlConnection(polku);
+            yhteys.Open();
+
+            SqlCommand komento = new SqlCommand("SELECT distinct materiaali FROM tuotteet", yhteys);
+            SqlDataReader lukija = komento.ExecuteReader();
+
+            DataTable taulu = new DataTable();
+            //taulu.Columns.Add("ID", typeof(string));
+            taulu.Columns.Add("NIMI", typeof(string));
+
+            while (lukija.Read()) // käsitellään kyselytulos rivi riviltä
+            {
+                //int id = lukija.GetInt32(0);
+                string nimi = lukija.GetString(0);
+                taulu.Rows.Add(nimi); // lisätään datatauluun rivi tietoineen
+                materiaali_cb.Items.Add(lukija.GetString(0));
+            }
+            lukija.Close();
+            yhteys.Close();
+        }
+
+        private void PaivitaMuotoComboBox() //kopioitu asiakas cb:stä
+        {
+            //tuotelista_cb.Items.Clear();
+
+            SqlConnection yhteys = new SqlConnection(polku);
+            yhteys.Open();
+
+            SqlCommand komento = new SqlCommand("SELECT distinct muoto FROM tuotteet", yhteys);
+            SqlDataReader lukija = komento.ExecuteReader();
+
+            DataTable taulu = new DataTable();
+            //taulu.Columns.Add("ID", typeof(string));
+            taulu.Columns.Add("NIMI", typeof(string));
+
+            while (lukija.Read()) // käsitellään kyselytulos rivi riviltä
+            {
+                //int id = lukija.GetInt32(0);
+                string nimi = lukija.GetString(0);
+                taulu.Rows.Add(nimi); // lisätään datatauluun rivi tietoineen
+                Muoto_cb.Items.Add(lukija.GetString(0));
+            }
+            lukija.Close();
+            yhteys.Close();
+        }
+
         private void Lisää_tuote_Click(object sender, RoutedEventArgs e)
         {
             SqlConnection yhteys = new SqlConnection(polku);
@@ -151,29 +204,25 @@ namespace Sovelluskehitys2024
             PaivitaAsiakasComboBox();
         }
 
-        private void materiaali_cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Lisää_varastoon(object sender, RoutedEventArgs e)
         {
-            //tuotelista_cb.Items.Clear();
-
             SqlConnection yhteys = new SqlConnection(polku);
             yhteys.Open();
 
-            SqlCommand komento = new SqlCommand("SELECT * FROM asiakkaat", yhteys);
-            SqlDataReader lukija = komento.ExecuteReader();
+            string materiaali = materiaali_cb.SelectedValue.ToString();
+            string muoto = Muoto_cb.SelectedValue.ToString();
 
-            DataTable taulu = new DataTable();
-            taulu.Columns.Add("ID", typeof(string));
-            taulu.Columns.Add("NIMI", typeof(string));
+            //UPDATE tuotteet SET määrä=15 WHERE materiaali='ALU' AND muoto = 'neliöputki' AND mitat = '30x30x2';
+            string kysely = "UPDATE tuotteet SET määrä=" + määrä.Text + " WHERE materiaali='" + materiaali + "' AND muoto = '"+ muoto +"' AND mitat = '" + mitat.Text + "';";
+            SqlCommand komento = new SqlCommand(kysely, yhteys);
+            komento.ExecuteNonQuery();
 
-            while (lukija.Read()) // käsitellään kyselytulos rivi riviltä
-            {
-                int id = lukija.GetInt32(0);
-                string nimi = lukija.GetString(1);
-                taulu.Rows.Add(id, nimi); // lisätään datatauluun rivi tietoineen
-                //tuotelista_cb.Items.Add(lukija.GetString(1));
-            }
-            lukija.Close();
             yhteys.Close();
+
+            poista.Content=kysely;
+
+            PaivitaDataGrid("SELECT materiaali, muoto, mitat FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", tuotelista);
+            PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
         }
     }
 }

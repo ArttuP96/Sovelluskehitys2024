@@ -34,7 +34,7 @@
                     <Label Content="muoto" HorizontalAlignment="Left" Margin="372,100,0,0" VerticalAlignment="Top" Width="86" Grid.Column="1"/>
                     <Button Content="Lisää tuote" HorizontalAlignment="Left" Margin="458,0,0,0" VerticalAlignment="Center" Width="144" Height="36" Click="Lisää_tuote_Click" Grid.Column="1"/>
                     <TextBox x:Name="mitat" HorizontalAlignment="Left" Margin="458,150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="144" Height="25" Grid.Column="1"/>
-                    <Label Content="mitat" HorizontalAlignment="Left" Margin="372,150,0,0" VerticalAlignment="Top" Width="86" Grid.Column="1"/>
+                    <Label Content="mitat1" HorizontalAlignment="Left" Margin="372,150,0,0" VerticalAlignment="Top" Width="86" Grid.Column="1"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Asiakas sivu" Height="20" VerticalAlignment="Top">
@@ -56,14 +56,18 @@
             <TabItem Header="Varasto">
                 <Grid>
                     <DataGrid x:Name="varastolista" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="50,28,385,120"/>
-                    <ComboBox x:Name="materiaali_cb" HorizontalAlignment="Left" Margin="540,75,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="materiaali_cb_SelectionChanged"/>
+                    <ComboBox x:Name="materiaali_cb" HorizontalAlignment="Left" Margin="540,75,0,0" VerticalAlignment="Top" Width="120"/>
                     <ComboBox x:Name="Muoto_cb" HorizontalAlignment="Left" Margin="540,125,0,0" VerticalAlignment="Top" Width="120"/>
-                    <TextBox HorizontalAlignment="Left" Margin="540,175,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="Mitat" HorizontalAlignment="Left" Margin="540,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Lisää tuotteita varastoon" HorizontalAlignment="Left" Margin="533,28,0,0" VerticalAlignment="Top" Width="182"/>
-                    <Label Content="Materiaali" HorizontalAlignment="Left" Margin="465,73,0,0" VerticalAlignment="Top" Width="182"/>
-                    <Label Content="Muoto" HorizontalAlignment="Left" Margin="465,123,0,0" VerticalAlignment="Top" Width="182"/>
-                    <Label Content="Mitat" HorizontalAlignment="Left" Margin="465,171,0,0" VerticalAlignment="Top" Width="182"/>
-                    <Button Content="Lisää" HorizontalAlignment="Left" Margin="540,225,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Materiaali" HorizontalAlignment="Left" Margin="465,73,0,0" VerticalAlignment="Top" Width="75"/>
+                    <Label Content="Muoto" HorizontalAlignment="Left" Margin="465,123,0,0" VerticalAlignment="Top" Width="75"/>
+                    <Label Content="Mitat" HorizontalAlignment="Left" Margin="465,171,0,0" VerticalAlignment="Top" Width="70"/>
+                    <Button Content="Lisää" HorizontalAlignment="Left" Margin="540,275,0,0" VerticalAlignment="Top" Width="120" Click="Lisää_varastoon"/>
+                    <TextBox x:Name ="määrä" HorizontalAlignment="Left" Margin="540,225
+                             ,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Määrä" HorizontalAlignment="Left" Margin="465,222,0,0" VerticalAlignment="Top" Width="70"/>
+                    <Label x:Name="poista" Content="" HorizontalAlignment="Left" Margin="50,342,0,0" VerticalAlignment="Top"/>
 
                 </Grid>
             </TabItem>
