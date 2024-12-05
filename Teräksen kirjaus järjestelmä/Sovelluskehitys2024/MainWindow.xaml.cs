@@ -22,7 +22,7 @@ namespace Sovelluskehitys2024
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        string polku = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Arttu\\Documents\\testitietokanta.mdf;Integrated Security=True;Connect Timeout=30";
+        string polku = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\k2202255\\Documents\\testitietokanta.mdf;Integrated Security=True;Connect Timeout=30;Encrypt=True";
         public MainWindow()
         {
             InitializeComponent();
@@ -34,9 +34,11 @@ namespace Sovelluskehitys2024
                 PaivitaDataGrid("SELECT materiaali, muoto, mitat FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", tuotelista);
                 PaivitaDataGrid("SELECT * FROM asiakkaat", "asiakkaat", asiakaslista);
                 PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
-                PaivitaAsiakasComboBox();
+                //PaivitaAsiakasComboBox();
                 PaivitaMateriaaliComboBox();
                 PaivitaMuotoComboBox();
+                PaivitaYritysComboBox();
+                
 
 
             }
@@ -62,7 +64,6 @@ namespace Sovelluskehitys2024
 
             yhteys.Close();
         }
-
         private void PaivitaComboBox(ComboBox kombo1, ComboBox kombo2)
         {
             //tuotelista_cb.Items.Clear();
@@ -97,8 +98,6 @@ namespace Sovelluskehitys2024
 
             yhteys.Close();
         }
-
-
         private void PaivitaAsiakasComboBox()
         {
             //tuotelista_cb.Items.Clear();
@@ -123,7 +122,6 @@ namespace Sovelluskehitys2024
             lukija.Close();
             yhteys.Close();
         }
-
         private void PaivitaMateriaaliComboBox() //kopioitu asiakas cb:stä
         {
             //tuotelista_cb.Items.Clear();
@@ -148,7 +146,6 @@ namespace Sovelluskehitys2024
             lukija.Close();
             yhteys.Close();
         }
-
         private void PaivitaMuotoComboBox() //kopioitu asiakas cb:stä
         {
             //tuotelista_cb.Items.Clear();
@@ -169,6 +166,30 @@ namespace Sovelluskehitys2024
                 string nimi = lukija.GetString(0);
                 taulu.Rows.Add(nimi); // lisätään datatauluun rivi tietoineen
                 Muoto_cb.Items.Add(lukija.GetString(0));
+            }
+            lukija.Close();
+            yhteys.Close();
+        }
+        private void PaivitaYritysComboBox() //kopioitu asiakas cb:stä
+        {
+            //tuotelista_cb.Items.Clear();
+
+            SqlConnection yhteys = new SqlConnection(polku);
+            yhteys.Open();
+
+            SqlCommand komento = new SqlCommand("SELECT yrityksen_nimi FROM asiakkaat", yhteys);
+            SqlDataReader lukija = komento.ExecuteReader();
+
+            DataTable taulu = new DataTable();
+            //taulu.Columns.Add("ID", typeof(string));
+            taulu.Columns.Add("yrityksen_nimi", typeof(string));
+
+            while (lukija.Read()) // käsitellään kyselytulos rivi riviltä
+            {
+                //int id = lukija.GetInt32(0);
+                string nimi = lukija.GetString(0);
+                taulu.Rows.Add(nimi); // lisätään datatauluun rivi tietoineen
+                myynti_asiakas_cb.Items.Add(lukija.GetString(0));
             }
             lukija.Close();
             yhteys.Close();
@@ -218,12 +239,21 @@ namespace Sovelluskehitys2024
             //Select määrä from tuotteet WHERE materiaali = 'ALU' AND muoto = 'neliöputki' AND mitat = '50x50x3';
             string määrä_atm_komento = "Select määrä from tuotteet WHERE materiaali = '" + materiaali + "' AND muoto = '" + muoto + "' AND mitat = '" + Mitat_varasto.Text + "';";
             SqlCommand määrä_komento = new SqlCommand(määrä_atm_komento, yhteys);
+            SqlDataReader lukija  = määrä_komento.ExecuteReader();
+            int result = 0;
 
-            int result = (Int32)määrä_komento.ExecuteScalar();
-            //object result = määrä_komento.ExecuteScalar();
+            
+            while (lukija.Read())
+            {
+                string tulos1 = lukija.GetString(0);
+                result = int.Parse(tulos1);
+            }
+
+            
+            lukija.Close();
 
             //kerrotaan kuudella koska putket ovat 6 metrisiä
-            int oikea_määrä = result + int.Parse(määrä.Text) * 6;
+            int oikea_määrä = result + int.Parse(määrä.Text);
 
             //UPDATE tuotteet SET määrä=15 WHERE materiaali='ALU' AND muoto = 'neliöputki' AND mitat = '30x30x2';
             string kysely = "UPDATE tuotteet SET määrä=" +  oikea_määrä + " WHERE materiaali='" + materiaali + "' AND muoto = '"+ muoto +"' AND mitat = '" + Mitat_varasto.Text + "';";
@@ -234,6 +264,23 @@ namespace Sovelluskehitys2024
 
             PaivitaDataGrid("SELECT materiaali, muoto, mitat FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", tuotelista);
             PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
+        }
+
+        private void Myy_tuote(object sender, RoutedEventArgs e)
+        {
+            SqlConnection yhteys = new SqlConnection(polku);
+            yhteys.Open();
+
+            string yritys = myynti_asiakas_cb.SelectedValue.ToString();
+
+            string kysely = "INSERT INTO myyty (asiakas_id, tuote_id, määrä) VALUES ('" + yritys + "','" + myynti_tuote_id.Text + "','" + myynti_määrä.Text + "');";
+            SqlCommand komento = new SqlCommand(kysely, yhteys);
+            komento.ExecuteNonQuery();
+
+            yhteys.Close();
+
+            PaivitaDataGrid("SELECT * FROM asiakkaat", "asiakkaat", asiakaslista);
+            PaivitaAsiakasComboBox();
         }
     }
 }

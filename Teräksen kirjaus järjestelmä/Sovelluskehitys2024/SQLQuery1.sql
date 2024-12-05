@@ -1,18 +1,21 @@
-﻿create table tuotteet (id INTEGER IDENTITY(1,1) PRIMARY KEY, materiaali VARCHAR(50), muoto VARCHAR(50), mitat VARCHAR(50));
+﻿create table tuotteet (id INTEGER IDENTITY(1,1) PRIMARY KEY, materiaali VARCHAR(50), muoto VARCHAR(50), mitat VARCHAR(50), määrä VARCHAR(50));
 create table asiakkaat (id INTEGER IDENTITY(1,1) PRIMARY KEY, yrityksen_nimi VARCHAR(50), yhteys_henkilö VARCHAR(50), puhelin_numero VARCHAR(50));
 create table varasto_paikat (id INTEGER IDENTITY(1,1) PRIMARY KEY, varasto_paikka VARCHAR(50));
 
 
 
---UPDATE tuotteet SET määrä = 0;
+--UPDATE tuotteet SET määrä = 1;
 --ALTER TABLE tuotteet ADD määrä int;
 --drop table asiakkaat;
 UPDATE tuotteet SET määrä=0 WHERE materiaali='ALU' AND muoto = 'neliöputki' AND mitat = '30x30x2';
 --DELETE FROM tuotteet WHERE id=13;
 --Select määrä from tuotteet WHERE materiaali = 'ALU' AND muoto = 'neliöputki' AND mitat = '50x50x3';
 
+ALTER TABLE myyty ADD määrä int;
 
-
+--drop table asiakkaat;
+select * from Tuotteet;
+SELECT id FROM tuotteet
 
 
 

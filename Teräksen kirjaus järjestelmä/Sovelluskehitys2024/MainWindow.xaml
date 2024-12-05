@@ -74,6 +74,16 @@
             <TabItem Header="Myynti">
                 <Grid>
                     <DataGrid x:Name="myyntilista" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="50,28,385,120"/>
+                    <ComboBox x:Name="myynti_asiakas_cb" HorizontalAlignment="Left" Margin="540,75,0,0" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="myynti_tuote_id" HorizontalAlignment="Left" Margin="540,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="myynti_määrä" HorizontalAlignment="Left" Margin="540,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Myy" HorizontalAlignment="Left" Margin="540,225,0,0" VerticalAlignment="Top" Width="120" Click="Myy_tuote"/>
+                    <Label Content="Myy tuotteita asiakkaille" HorizontalAlignment="Left" Margin="533,28,0,0" VerticalAlignment="Top" Width="182"/>
+                    <Label Content="asiakas" HorizontalAlignment="Left" Margin="465,73,0,0" VerticalAlignment="Top" Width="75"/>
+                    <Label Content="tuote id" HorizontalAlignment="Left" Margin="465,123,0,0" VerticalAlignment="Top" Width="75"/>
+                    <Label Content="määrä" HorizontalAlignment="Left" Margin="465,171,0,0" VerticalAlignment="Top" Width="70"/>
+
+
                 </Grid>
             </TabItem>
             <TabItem Header="Historia">
