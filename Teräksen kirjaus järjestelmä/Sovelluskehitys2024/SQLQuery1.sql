@@ -1,11 +1,11 @@
 ﻿create table tuotteet (id INTEGER IDENTITY(1,1) PRIMARY KEY, materiaali VARCHAR(50), muoto VARCHAR(50), mitat VARCHAR(50), määrä VARCHAR(50));
 create table asiakkaat (id INTEGER IDENTITY(1,1) PRIMARY KEY, yrityksen_nimi VARCHAR(50), yhteys_henkilö VARCHAR(50), puhelin_numero VARCHAR(50));
-create table varasto_paikat (id INTEGER IDENTITY(1,1) PRIMARY KEY, varasto_paikka VARCHAR(50));
+create table varasto (id INTEGER IDENTITY(1,1) PRIMARY KEY, hylly_paikka varchar(50));
+create table myyty (id INTEGER IDENTITY(1,1) PRIMARY KEY, asiakas varchar(50), tuote_id int references tuotteet(id), määrä int)
 
-
-
---UPDATE tuotteet SET määrä = 1;
---ALTER TABLE tuotteet ADD määrä int;
+drop table varasto;
+UPDATE tuotteet SET määrä = 1 where id = 1;
+ALTER TABLE tuotteet ADD hylly_paikka varchar(50);
 --drop table asiakkaat;
 UPDATE tuotteet SET määrä=0 WHERE materiaali='ALU' AND muoto = 'neliöputki' AND mitat = '30x30x2';
 --DELETE FROM tuotteet WHERE id=13;
@@ -17,9 +17,17 @@ ALTER TABLE myyty ADD määrä int;
 select * from Tuotteet;
 SELECT id FROM tuotteet
 
+select tuotteet.id,tuotteet.materiaali, tuotteet.muoto, tuotteet.mitat, varasto.hylly_paikka from tuotteet, varasto where tuotteet.id=varasto.palkin_id;
+select * from tuotteet;
+select * from varasto;
 
 
 
+INSERT INTO varasto (hylly_paikka) VALUES ('B4');
+
+
+
+SELECT hylly_paikka FROM varasto;
 
 
 

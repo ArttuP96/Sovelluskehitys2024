@@ -34,11 +34,15 @@ namespace Sovelluskehitys2024
                 PaivitaDataGrid("SELECT materiaali, muoto, mitat FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", tuotelista);
                 PaivitaDataGrid("SELECT * FROM asiakkaat", "asiakkaat", asiakaslista);
                 PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
+                PaivitaDataGrid("SELECT * FROM myyty", "myyty", myyntilista);
+                PaivitaDataGrid("select id,materiaali, muoto, mitat, hylly_paikka from tuotteet", "varasto", hyllylista);
+
+                
                 //PaivitaAsiakasComboBox();
                 PaivitaMateriaaliComboBox();
                 PaivitaMuotoComboBox();
                 PaivitaYritysComboBox();
-                
+                PaivitaHyllyComboBox();
 
 
             }
@@ -195,6 +199,31 @@ namespace Sovelluskehitys2024
             yhteys.Close();
         }
 
+        private void PaivitaHyllyComboBox() //kopioitu asiakas cb:stä
+        {
+            //tuotelista_cb.Items.Clear();
+
+            SqlConnection yhteys = new SqlConnection(polku);
+            yhteys.Open();
+
+            SqlCommand komento = new SqlCommand("SELECT hylly_paikka FROM varasto;", yhteys);
+            SqlDataReader lukija = komento.ExecuteReader();
+
+            DataTable taulu = new DataTable();
+            //taulu.Columns.Add("ID", typeof(string));
+            taulu.Columns.Add("hylly_paikka", typeof(string));
+
+            while (lukija.Read()) // käsitellään kyselytulos rivi riviltä
+            {
+                //int id = lukija.GetInt32(0);
+                string nimi = lukija.GetString(0);
+                taulu.Rows.Add(nimi); // lisätään datatauluun rivi tietoineen
+                varastopaikka_cb.Items.Add(nimi);
+            }
+            lukija.Close();
+            yhteys.Close();
+        }
+
         private void Lisää_tuote_Click(object sender, RoutedEventArgs e)
         {
             SqlConnection yhteys = new SqlConnection(polku);
@@ -273,14 +302,67 @@ namespace Sovelluskehitys2024
 
             string yritys = myynti_asiakas_cb.SelectedValue.ToString();
 
-            string kysely = "INSERT INTO myyty (asiakas_id, tuote_id, määrä) VALUES ('" + yritys + "','" + myynti_tuote_id.Text + "','" + myynti_määrä.Text + "');";
+            string kysely = "INSERT INTO myyty (asiakas, tuote_id, määrä) VALUES ('" + yritys + "','" + myynti_tuote_id.Text + "','" + myynti_määrä.Text + "');";
+            SqlCommand komento = new SqlCommand(kysely, yhteys);
+            komento.ExecuteNonQuery();
+
+            int id = int.Parse(myynti_tuote_id.Text);
+
+            //yritä kaivaa current määrä
+            //Select määrä from tuotteet WHERE materiaali = 'ALU' AND muoto = 'neliöputki' AND mitat = '50x50x3';
+            string määrä_atm_komento = "Select määrä from tuotteet WHERE id = '" + id + "';";
+            SqlCommand määrä_komento = new SqlCommand(määrä_atm_komento, yhteys);
+            SqlDataReader lukija = määrä_komento.ExecuteReader();
+            int result = 0;
+
+            while (lukija.Read())
+            {
+                string tulos1 = lukija.GetString(0);
+                result = int.Parse(tulos1);
+            }
+
+
+            //yritetään vähentää putkien nykyisestä määrästä myyty määrä!
+            int vähennettävä = int.Parse(myynti_määrä.Text);
+            int oikea_määrä = result-vähennettävä;
+
+            lukija.Close();
+            //kokeilua, yritä kaivaa current määrä
+            //Select määrä from tuotteet WHERE materiaali = 'ALU' AND muoto = 'neliöputki' AND mitat = '50x50x3';
+            string määrä_atm_komento1 = "UPDATE tuotteet SET määrä=" + oikea_määrä + " WHERE id='" + id + "';";
+            SqlCommand määrä_komento1 = new SqlCommand(määrä_atm_komento1, yhteys);
+            SqlDataReader lukija1 = määrä_komento1.ExecuteReader();
+            int result1 = 0;
+
+
+            while (lukija1.Read())
+            {
+                string tulos1 = lukija1.GetString(0);
+                result = int.Parse(tulos1);
+            }
+
+            lukija1.Close();
+
+            yhteys.Close();
+            PaivitaDataGrid("SELECT * FROM myyty", "myyty", myyntilista);
+            PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
+        }
+
+        private void Vaihda_varastopaikka(object sender, RoutedEventArgs e)
+        {
+            SqlConnection yhteys = new SqlConnection(polku);
+            yhteys.Open();
+
+            string hylly = varastopaikka_cb.SelectedValue.ToString();
+            int id = int.Parse(hylly_palkki_id.Text);
+
+            string kysely = "UPDATE tuotteet SET hylly_paikka = '"+ hylly +"' where id = '"+ id + "';";
             SqlCommand komento = new SqlCommand(kysely, yhteys);
             komento.ExecuteNonQuery();
 
             yhteys.Close();
 
-            PaivitaDataGrid("SELECT * FROM asiakkaat", "asiakkaat", asiakaslista);
-            PaivitaAsiakasComboBox();
+            PaivitaDataGrid("select id,materiaali, muoto, mitat, hylly_paikka from tuotteet", "varasto", hyllylista);
         }
     }
 }
