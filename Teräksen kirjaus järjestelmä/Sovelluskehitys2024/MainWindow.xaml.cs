@@ -33,9 +33,9 @@ namespace Sovelluskehitys2024
             {
                 PaivitaDataGrid("SELECT materiaali, muoto, mitat FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", tuotelista);
                 PaivitaDataGrid("SELECT * FROM asiakkaat", "asiakkaat", asiakaslista);
-                PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
+                PaivitaDataGrid("SELECT materiaali,muoto,mitat,määrä,hylly_paikka FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
                 PaivitaDataGrid("SELECT * FROM myyty", "myyty", myyntilista);
-                PaivitaDataGrid("select id,materiaali, muoto, mitat, hylly_paikka from tuotteet", "varasto", hyllylista);
+                PaivitaDataGrid("select id,materiaali, muoto, mitat, hylly_paikka from tuotteet ORDER BY materiaali, muoto", "varasto", hyllylista);
 
                 
                 //PaivitaAsiakasComboBox();
@@ -235,6 +235,7 @@ namespace Sovelluskehitys2024
 
             yhteys.Close();
 
+            PaivitaDataGrid("select id,materiaali, muoto, mitat, hylly_paikka from tuotteet", "varasto", hyllylista);
             PaivitaDataGrid("SELECT materiaali, muoto, mitat FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", tuotelista);
             PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
         }
@@ -291,18 +292,22 @@ namespace Sovelluskehitys2024
 
             yhteys.Close();
 
+            PaivitaDataGrid("select id,materiaali, muoto, mitat, hylly_paikka from tuotteet ORDER BY materiaali, muoto", "varasto", hyllylista);
             PaivitaDataGrid("SELECT materiaali, muoto, mitat FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", tuotelista);
-            PaivitaDataGrid("SELECT * FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
+            PaivitaDataGrid("SELECT materiaali,muoto,mitat,määrä,hylly_paikka FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
         }
 
         private void Myy_tuote(object sender, RoutedEventArgs e)
         {
+            DateTime päivä = DateTime.Now;
+            
+            
             SqlConnection yhteys = new SqlConnection(polku);
             yhteys.Open();
 
             string yritys = myynti_asiakas_cb.SelectedValue.ToString();
 
-            string kysely = "INSERT INTO myyty (asiakas, tuote_id, määrä) VALUES ('" + yritys + "','" + myynti_tuote_id.Text + "','" + myynti_määrä.Text + "');";
+            string kysely = "INSERT INTO myyty (asiakas, tuote_id, määrä, aika) VALUES ('" + yritys + "','" + myynti_tuote_id.Text + "','" + myynti_määrä.Text + "','" + päivä + "');";
             SqlCommand komento = new SqlCommand(kysely, yhteys);
             komento.ExecuteNonQuery();
 
@@ -362,7 +367,8 @@ namespace Sovelluskehitys2024
 
             yhteys.Close();
 
-            PaivitaDataGrid("select id,materiaali, muoto, mitat, hylly_paikka from tuotteet", "varasto", hyllylista);
+            PaivitaDataGrid("select id,materiaali, muoto, mitat, hylly_paikka from tuotteet ORDER BY materiaali, muoto", "varasto", hyllylista);
+            PaivitaDataGrid("SELECT materiaali,muoto,mitat,määrä,hylly_paikka FROM tuotteet ORDER BY materiaali, muoto", "tuotteet", varastolista);
         }
     }
 }
